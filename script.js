@@ -1,59 +1,70 @@
 'use strict';
 
-const STORE_BASE_URL = 'https://fakestoreapi.com';
-const CONTAINER = document.querySelector('.container');
+class App {
+  static async run() {
+    const products = await APIService.fetchProducts();
+    HomePage.renderProducts(products);
+  }
+}
 
-// Don't touch this function please
-const autorun = async () => {
-  const products = await fetchProducts();
-  renderProducts(products);
-};
+class APIService {
+  static STORE_BASE_URL = 'https://fakestoreapi.com';
+  static async fetchProducts() {
+    const url = APIService._constructUrl('products');
+    const res = await fetch(url);
+    const data = await res.json();
+    return data.map((product) => new Product(product));
+  }
+  static async fetchProduct(productId) {
+    const url = APIService._constructUrl(`products/${productId}`);
+    const res = await fetch(url);
+    const data = await res.json();
+    return new Product(data);
+  }
+  static _constructUrl(path) {
+    return `${APIService.STORE_BASE_URL}/${path}`;
+  }
+}
 
-// Don't touch this function please
-const constructUrl = (path) => {
-  return `${STORE_BASE_URL}/${path}`;
-};
-
-// This function is to fetch products. You may need to add it or change some part in it in order to apply some of the features.
-const fetchProducts = async () => {
-  const url = constructUrl(`products`);
-  const res = await fetch(url);
-  return res.json();
-};
-
-// Don't touch this function please. This function is to fetch one product.
-const fetchProduct = async (productId) => {
-  const url = constructUrl(`products/${productId}`);
-  const res = await fetch(url);
-  return res.json();
-};
-
-// You may need to add to this function, definitely don't delete it.
-const productDetails = async (product) => {
-  const res = await fetchProduct(product.id);
-  renderProduct(res);
-};
-
-// You'll need to play with this function in order to add features and enhance the style.
-const renderProducts = (products) => {
-  products.map((product) => {
-    const productDiv = document.createElement('div');
-    productDiv.innerHTML = `
+class HomePage {
+  static container = document.querySelector('body');
+  static renderProducts(products) {
+    products.forEach((product) => {
+      const productDiv = document.createElement('div');
+      productDiv.innerHTML = `
           <img src="${product.image}" alt="${product.title} poster">
           <h3>${product.title}</h3>`;
-    productDiv.addEventListener('click', () => {
-      productDetails(product);
+      productDiv.addEventListener('click', () => {
+        Products.run(product);
+      });
+      this.container.appendChild(productDiv);
     });
-    CONTAINER.appendChild(productDiv);
-  });
-};
+  }
+}
 
-// You'll need to play with this function in order to add features and enhance the style.
-const renderProduct = (product) => {
-  CONTAINER.innerHTML = `
-      <div class="row">
-          ${product.title}
+class Products {
+  static async run(product) {
+    const productDetails = await APIService.fetchProduct(product.id);
+    ProductPage.renderProduct(productDetails);
+  }
+}
+
+class ProductPage {
+  static container = document.querySelector('body');
+  static renderProduct(product) {
+    ProductPage.container.innerHTML = `
+      <div>
+        ${product.title}
       </div>`;
-};
+  }
+}
 
-document.addEventListener('DOMContentLoaded', autorun);
+class Product {
+  constructor(json) {
+    this.id = json.id;
+    this.title = json.title;
+    this.image = json.image;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', App.run);
