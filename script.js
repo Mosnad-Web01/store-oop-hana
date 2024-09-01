@@ -23,9 +23,8 @@ class App {
     } catch (error) {
       console.error("Failed to fetch data:", error);
     }
-      
+
     Cart.updateCartIcon();
-    
   }
 }
 
@@ -74,18 +73,19 @@ class HomePage {
   static products = []; // Initialize products as a static property
 
   static renderProducts(products, priceRange = { min: Infinity, max: Infinity }, rate = "all") {
-    this.products = products;
+    if(this.products.length == 0)
+     this.products = products;
     this.container.innerHTML = "";
     console.log(priceRange, this.products, rate);
 
-    if (priceRange && !(priceRange.min === Infinity && priceRange.max === Infinity)) {
+    if (priceRange && !(priceRange.min == Infinity && priceRange.max == Infinity)) {
       products = products.filter((product) => {
         return product.price >= priceRange.min && product.price <= priceRange.max;
       });
     }
     if (rate !== "all" && rate > 0) {
       products = products.filter((product) => {
-        return parseInt(product.rating.rate) === rate;
+        return parseInt(product.rating.rate) == rate;
       });
     }
 
@@ -102,6 +102,7 @@ class HomePage {
             <h5 class="text-lg font-semibold">${product.title}</h5>
             <p class="text-gray-500">${product.category}</p>
             <p class="text-gray-700 font-bold">${product.price} €</p>
+            <p class="text-gray-700 font-bold">${product.rating.rate}</p>
             <button class="absolute bottom-2 right-2 text-white bg-blue-500 hover:bg-blue-600 p-1 rounded-full">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18l-2 10H5L3 3z"></path>
@@ -147,7 +148,7 @@ class Products {
 class ProductPage {
   static container = document.querySelector("main");
 
-static renderProduct(product) {
+  static renderProduct(product) {
     ProductPage.container.innerHTML = `
       <div>
         <img src="${product.image}" alt="${product.title} poster">
@@ -175,74 +176,82 @@ class Navbar {
   static create(categories) {
     const nav = document.createElement("nav");
     nav.className = "flex items-center justify-between px-6 py-4 bg-white shadow-md z-10";
+    nav.innerHTML = `
+  <!-- العلامة التجارية -->
+  <div class="text-xl font-bold">chanta</div>
 
-    nav.innerHTML = ` 
-      <div class="text-xl font-bold">chanta</div>
-      <div class="flex space-x-6">
-        <a href="#" class="text-gray-600 hover:text-gray-900">Home</a>
-        <div class="relative group">
-          
-        <button  id="categories-button" class="text-gray-600 hover:text-gray-900">Categories</button>
-          <div class="categories-dropdown absolute left-0 mt-2 w-48 bg-white border rounded shadow-lg hidden group-hover:block">
-          <div  id="catogry-dropdown" class=" categories-dropdown absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-          <div class="py-1" role="menuitem">
-              <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="category-item-all" data-category="all">All</a>
+  <!-- عناصر القائمة -->
+  <div class="flex space-x-6">
+    <!-- Home -->
+    <a href="#" class="text-gray-600 hover:text-gray-900">Home</a>
 
-            ${categories
-            .map(
-            (category, index) => 
-              `<a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700"  role="menuitem" tabindex="-1" id="category-item-${category}" data-category="${category}">${category}</a>`
-            
-              )
-              .join("")}
-          </div>
-          </div>
+    <!-- Categories Dropdown -->
+    <div class="relative group">
+      <button id="categories-button" class="text-gray-600 hover:text-gray-900">Categories</button>
+      <div class="categories-dropdown absolute left-0 mt-2 w-48 bg-white border rounded shadow-lg  group-hover:block z-50">
+        <div id="category-dropdown" class="categories-dropdown-content py-1" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="category-item-all" data-category="all">All</a>
+          ${categories
+        .map(
+          (category) =>
+            `<a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="category-item-${category}" data-category="${category}">${category}</a>`
+        )
+        .join("")}
         </div>
-        <a href="#" class="text-gray-600 hover:text-gray-900">About</a>
       </div>
-      <div class="flex items-center space-x-6">
-    <!-- Filter by Rate -->
-    <div class="relative">
-        <button id="rate-button" class="text-gray-600 hover:text-gray-900">Filter by Rate</button>
-        <div id="rate-dropdown" class="rate-dropdown hidden absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-            <div class="py-1" role="menuitem">
-                <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" role="menuitem" data-rate="5">5 Stars</a>
-                <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" role="menuitem" data-rate="4">4 Stars & Up</a>
-                <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" role="menuitem" data-rate="3">3 Stars & Up</a>
-            </div>
-        </div>
     </div>
 
-    <!-- Filter by Price -->
-    <div class="relative">
-        <button id="price-button" class="text-gray-600 hover:text-gray-900">Filter by Price</button>
-        <div id="price-dropdown" class="price-dropdown hidden absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-            <div class="py-1" role="menuitem">
-                <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" data-price="0-50">€0 - €50</a>
-                <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" data-price="50-100">€50 - €100</a>
-                <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" data-price="100-200">€100 - €200</a>
-                <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" data-price="200+">€200 & Above</a>
-            </div>
+    <!-- Filter by Rate Dropdown -->
+    <div class="relative group">
+      <button id="rate-button" class="text-gray-600 hover:text-gray-900">Filter by Rate</button>
+      <div class="rate-dropdown absolute left-0 mt-2 w-48 bg-white border rounded shadow-lg 
+       group-hover:block z-50">
+        <div class="py-1" role="menuitem">
+          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" role="menuitem" data-rate="5">5 Stars</a>
+          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" role="menuitem" data-rate="4">4 Stars & Up</a>
+          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" role="menuitem" data-rate="3">3 Stars & Up</a>
         </div>
+      </div>
     </div>
 
-    <!-- Search and Cart -->
+    <!-- Filter by Price Dropdown -->
+    <div class="relative group">
+      <button id="price-button" class="text-gray-600 hover:text-gray-900">Filter by Price</button>
+      <div class="price-dropdown absolute left-0 mt-2 w-48 bg-white border rounded shadow-lg hidden group-hover:block peer-focus:block z-50 ">
+        <div class="py-1" role="menuitem">
+          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" data-price="0-50">€0 - €50</a>
+          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" data-price="50-100">€50 - €100</a>
+          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" data-price="100-200">€100 - €200</a>
+          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" data-price="200+">€200 & Above</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- About -->
+    <a href="#" class="text-gray-600 hover:text-gray-900">About</a>
+  </div>
+
+  <!-- البحث والسلة -->
+  <div class="flex items-center space-x-6 ml-auto">
+    <!-- شريط البحث -->
     <div class="flex">
-        <input type="text" placeholder="Search" class="px-4 py-2 border rounded-l-md focus:outline-none">
-        <button class="bg-gray-600 text-white px-4 py-2 rounded-r-md hover:bg-gray-700 focus:outline-none">Search</button>
+      <input id="search" type="text" placeholder="Search" class="search-input px-4 py-2 border rounded-l-md focus:outline-none">
+      <button class="search-button bg-gray-600 text-white px-4 py-2 rounded-r-md hover:bg-gray-700 focus:outline-none">Search</button>
     </div>
-    <a href="#" class="text-gray-600 hover:text-gray-900 relative">
-        <div class= "cart-div relative">
+
+    <!-- سلة التسوق -->
+    <a href="#" class="cart-link text-gray-600 hover:text-gray-900 relative">
+      <div class=" relative">
         <svg class="cart-svg w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18l-2 10H5L3 3z"></path>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 17a4 4 0 11-8 0"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18l-2 10H5L3 3z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 17a4 4 0 11-8 0"></path>
         </svg>
-        <span class="cart-icon-count absolute top-5 right-2 text-xs bg-red-600 text-white rounded-full h-5 w-5 flex items-center justify-center">0</span>
-        </div>
+        <span class="cart-icon-count absolute top-0.5 right-2 text-xs bg-red-600 text-white rounded-full h-5 w-5 flex items-center justify-center">0</span>
+      </div>
     </a>
-</div>
-`
-    ;
+  </div>
+`;
+
     this._addListeners(nav);
     return nav;
   }
@@ -257,13 +266,13 @@ class Navbar {
         const category = event.target.getAttribute("data-category");
         console.log(category);
         let products;
-    
-        if (category === 'all') {
-          products = await APIService.fetchProducts(); // افترضنا أنك لديك دالة لجلب جميع المنتجات
+
+        if (category == 'all') {
+          products = await APIService.fetchProducts();
         } else {
           products = await APIService.fetchProductsByCategory(category);
         }
-    
+
         HomePage.renderProducts(products);
       });
     });
@@ -295,30 +304,60 @@ class Navbar {
         HomePage.renderProducts(HomePage.products, priceRange);
       });
     });
-    document.addEventListener("DOMContentLoaded", () => {
-  // Attach event listener to the cart icon
-  const cartIcon = nav.querySelector(".cart-div"); // Assuming your cart icon has this class
+    // Attach event listener to the search input
 
-  if (cartIcon) {
-    cartIcon.addEventListener("click", (e) => {
-      e.preventDefault(); // Prevent default behavior if any
-      console.log("Cart icon clicked");
-      Cart.renderCart(); // Render the cart when the cart icon is clicked
-    });
-  } else {
-    console.error("Cart icon not found");
-  }
-});
+
+    const searchButton = nav.querySelector(".search-button");
+    const searchInput = nav.querySelector(".search-input");
+    if (searchButton && searchInput) {
+      searchButton.addEventListener("click", (event) => {
+        event.preventDefault(); //
+        const searchString = searchInput.value.trim().toLowerCase(); //to Lower case
+        console.log(searchString);
+        // Filter products
+        const filteredProducts = HomePage.products.filter(product => {
+          return (
+            product.title.toLowerCase().includes(searchString) ||
+            product.category.toLowerCase().includes(searchString) ||
+            product.price.toString().includes(searchString) ||
+            product.rating.rate.toString().includes(searchString)
+          );
+        });
+
+        HomePage.renderProducts(filteredProducts);
+      });
+
+      searchInput.addEventListener("keypress", (event) => {
+        if (event.key == "Enter") {
+          searchButton.click();
+        }
+      });
+    } else {
+      console.error("Search input or button not found");
+    }
+    // Attach event listener to the cart icon
+    const cartIcon = nav.querySelector(".cart-link"); // Assuming your cart icon has this class
+    console.log('Attach event listener', nav, cartIcon);
+
+    if (cartIcon) {
+      cartIcon.addEventListener("click", (e) => {
+        e.preventDefault(); // Prevent default behavior if any
+        console.log("Cart icon clicked");
+        Cart.renderCart(); // Render the cart when the cart icon is clicked
+      });
+    } else {
+      console.error("Cart icon not found");
+    }
 
   }
 }
 
 class Cart {
-  quantity ;  
+  quantity;
   static items = Cart.loadItems(); // Load items from localStorage
 
   static addProduct(product) {
-    const existingProduct = Cart.items.find(item => item.product.id === product.id);
+    const existingProduct = Cart.items.find(item => item.product.id == product.id);
     if (existingProduct) {
       existingProduct.quantity += 1;
     } else {
@@ -333,7 +372,33 @@ class Cart {
     this.saveItems(); // Save updates to localStorage
     this.updateCartIcon();
   }
+  static decreaseQty(productId) {
+    let itemIndex = Cart.items.findIndex(item => item.product.id == productId);
 
+    // Check if the item exists
+    if (itemIndex !== -1) {
+      // Decrease the quantity
+      Cart.items[itemIndex].quantity--;
+
+      // If quantity is zero, remove the item from the cart
+      if (Cart.items[itemIndex].quantity <= 0) {
+        Cart.items.splice(itemIndex, 1); // Remove the item
+      }
+    }
+    this.saveItems(); // Save updates to localStorage
+    this.updateCartIcon();
+  }
+  static increaseQty(productId) {
+    let itemIndex = Cart.items.findIndex(item => item.product.id == productId);
+
+    // Check if the item exists
+    if (itemIndex !== -1) {
+      // Decrease the quantity
+      Cart.items[itemIndex].quantity++;
+    }
+    this.saveItems(); // Save updates to localStorage
+    this.updateCartIcon();
+  }
   static saveItems() {
     localStorage.setItem('cartItems', JSON.stringify(Cart.items));
   }
@@ -348,7 +413,7 @@ class Cart {
     const totalItems = Cart.items.reduce((sum, item) => sum + item.quantity, 0);
     cartIconCount.textContent = totalItems;
   }
-   
+
   static renderCart() {
     const cartContainer = document.querySelector("main");
     cartContainer.innerHTML = "";
@@ -365,22 +430,33 @@ class Cart {
             <p class="text-gray-700">${item.product.price} €</p>
           </div>
         </div>
-        <div class="flex items-center space-x-4">
-          <span class="text-gray-700">x${item.quantity}</span>
+       <div class="flex items-center space-x-4">
+          <button class="decrease-btn bg-gray-300 text-black px-2 py-1 rounded">-</button>
+          <input type="number" value="${item.quantity}" class="quantity-input w-16 text-center border border-gray-300 rounded" min="0" />
+          <button class="increase-btn bg-gray-300 text-black px-2 py-1 rounded">+</button>
           <button class="remove-btn bg-red-500 text-white px-2 py-1 rounded">Remove</button>
-        </div>
+      </div>
+
       `;
 
       cartItemDiv.querySelector(".remove-btn").addEventListener("click", () => {
         Cart.removeProduct(item.product.id);
         Cart.renderCart();
       });
+      cartItemDiv.querySelector(".decrease-btn").addEventListener("click", () => {
+        Cart.decreaseQty(item.product.id);
+        Cart.renderCart();
+      });
+      cartItemDiv.querySelector(".increase-btn").addEventListener("click", () => {
+        Cart.increaseQty(item.product.id);
+        Cart.renderCart();
+      });
 
       cartContainer.appendChild(cartItemDiv);
     });
   }
-    
+
 }
-    // Setup dropdowns
+// Setup dropdowns
 
 document.addEventListener("DOMContentLoaded", App.run);

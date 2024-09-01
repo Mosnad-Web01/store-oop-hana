@@ -1,0 +1,80 @@
+static create(categories) {
+    const nav = document.createElement("nav");
+    nav.className = "flex items-center justify-between px-6 py-4 bg-white shadow-md z-10";
+    nav.innerHTML = `
+    <!-- العلامة التجارية -->
+    <div class="text-xl font-bold">chanta</div>
+
+    <!-- عناصر القائمة -->
+    <div class="flex space-x-6">
+        <!-- Home -->
+        <a href="#" class="text-gray-600 hover:text-gray-900">Home</a>
+
+        <!-- Categories Dropdown -->
+        <div class="relative">
+            <button id="categories-button" class="text-gray-600 hover:text-gray-900 focus:outline-none peer">Categories</button>
+            <div class="absolute left-0 mt-2 w-48 bg-white border rounded shadow-lg hidden peer-focus:block z-50">
+                <div id="category-dropdown" class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                    <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="category-item-all" data-category="all">All</a>
+                    ${categories
+                        .map(
+                            (category) =>
+                                `<a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="category-item-${category}" data-category="${category}">${category}</a>`
+                        )
+                        .join("")}
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter by Rate Dropdown -->
+        <div class="relative">
+            <button id="rate-button" class="text-gray-600 hover:text-gray-900 focus:outline-none peer">Filter by Rate</button>
+            <div class="absolute left-0 mt-2 w-48 bg-white border rounded shadow-lg hidden peer-focus:block z-50">
+                <div class="py-1" role="menuitem">
+                    <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" role="menuitem" data-rate="5">5 Stars</a>
+                    <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" role="menuitem" data-rate="4">4 Stars & Up</a>
+                    <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" role="menuitem" data-rate="3">3 Stars & Up</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter by Price Dropdown -->
+        <div class="relative">
+            <button id="price-button" class="text-gray-600 hover:text-gray-900 focus:outline-none peer">Filter by Price</button>
+            <div class="absolute left-0 mt-2 w-48 bg-white border rounded shadow-lg hidden peer-focus:block z-50">
+                <div class="py-1" role="menuitem">
+                    <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" data-price="0-50">€0 - €50</a>
+                    <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" data-price="50-100">€50 - €100</a>
+                    <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" data-price="100-200">€100 - €200</a>
+                    <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" data-price="200+">€200 & Above</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- About -->
+        <a href="#" class="text-gray-600 hover:text-gray-900">About</a>
+    </div>
+
+    <!-- البحث والسلة -->
+    <div class="flex items-center space-x-6 ml-auto">
+        <!-- شريط البحث -->
+        <div class="flex">
+            <input type="text" placeholder="Search" class="px-4 py-2 border rounded-l-md focus:outline-none">
+            <button class="bg-gray-600 text-white px-4 py-2 rounded-r-md hover:bg-gray-700 focus:outline-none">Search</button>
+        </div>
+
+        <!-- سلة التسوق -->
+        <a href="#" class="text-gray-600 hover:text-gray-900 relative">
+            <div class="relative">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18l-2 10H5L3 3z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 17a4 4 0 11-8 0"></path>
+                </svg>
+                <span class="absolute top-0 right-0 text-xs bg-red-600 text-white rounded-full h-5 w-5 flex items-center justify-center">0</span>
+            </div>
+        </a>
+    </div>
+    `;
+
+    return nav;
+}
