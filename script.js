@@ -116,7 +116,7 @@ class HomePage {
       productDiv.querySelector("button").addEventListener("click", (e) => {
         e.stopPropagation();
         Cart.addProduct(product);
-        Navbar.updateCartIcon();
+        Cart.updateCartIcon();
       });
 
       productDiv.addEventListener("click", () => {
@@ -297,7 +297,7 @@ class Navbar {
     });
     document.addEventListener("DOMContentLoaded", () => {
   // Attach event listener to the cart icon
-  const cartIcon = document.querySelector(".cart-svg"); // Assuming your cart icon has this class
+  const cartIcon = nav.querySelector(".cart-div"); // Assuming your cart icon has this class
 
   if (cartIcon) {
     cartIcon.addEventListener("click", (e) => {
@@ -381,7 +381,6 @@ class Cart {
   }
     
 }
-
     // Setup dropdowns
 
 document.addEventListener("DOMContentLoaded", App.run);

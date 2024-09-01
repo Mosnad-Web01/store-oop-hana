@@ -1,17 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
-    // Attach event listener to the cart icon
-    const cartIcon = document.querySelector(".cart-svg"); // Assuming your cart icon has this class
-  
-    if (cartIcon) {
-      cartIcon.addEventListener("click", (e) => {
-        e.preventDefault(); // Prevent default behavior if any
-        console.log("Cart icon clicked");
-        Cart.renderCart(); // Render the cart when the cart icon is clicked
-      });
-    } else {
-      console.error("Cart icon not found");
-    }
-  });
+
 
   //----Start -java script code for list
 document.addEventListener("DOMContentLoaded", () => {
