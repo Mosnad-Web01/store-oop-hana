@@ -25,6 +25,9 @@ class App {
     }
 
     Cart.updateCartIcon();
+    //Create Footer
+    const footer = Footer.create();
+    Body.append(footer);
   }
 }
 
@@ -71,10 +74,9 @@ class HomePage {
   static container = document.querySelector("main");
 
   static products = []; // Initialize products as a static property
-
   static renderProducts(products, priceRange = { min: Infinity, max: Infinity }, rate = "all") {
-    if(this.products.length == 0)
-     this.products = products;
+    if (this.products.length == 0)
+      this.products = products;
     this.container.innerHTML = "";
     console.log(priceRange, this.products, rate);
 
@@ -183,7 +185,7 @@ class Navbar {
   <!-- عناصر القائمة -->
   <div class="flex space-x-6">
     <!-- Home -->
-    <a href="#" class="text-gray-600 hover:text-gray-900">Home</a>
+    <a href="#" class="home-nav text-gray-600 hover:text-gray-900">Home</a>
 
     <!-- Categories Dropdown -->
     <div class="relative group">
@@ -226,9 +228,8 @@ class Navbar {
         </div>
       </div>
     </div>
-
     <!-- About -->
-    <a href="#" class="text-gray-600 hover:text-gray-900">About</a>
+    <a href="#" class="about-link text-gray-600 hover:text-gray-900">About</a>
   </div>
 
   <!-- البحث والسلة -->
@@ -257,6 +258,16 @@ class Navbar {
   }
 
   static _addListeners(nav) {
+    // Add listeners for Home 
+    const homeNav = nav.querySelectorAll(".home-nav");
+
+    homeNav.forEach((navItem) => {
+      navItem.addEventListener("click", async (event) => {
+        event.preventDefault();
+        HomePage.renderProducts(HomePage.products);
+      });
+    });
+
     // Add listeners for Category dropdown
     const dropdownItems = nav.querySelectorAll(".categories-dropdown .dropdown-item");
 
@@ -304,9 +315,8 @@ class Navbar {
         HomePage.renderProducts(HomePage.products, priceRange);
       });
     });
+
     // Attach event listener to the search input
-
-
     const searchButton = nav.querySelector(".search-button");
     const searchInput = nav.querySelector(".search-input");
     if (searchButton && searchInput) {
@@ -335,10 +345,10 @@ class Navbar {
     } else {
       console.error("Search input or button not found");
     }
+
     // Attach event listener to the cart icon
     const cartIcon = nav.querySelector(".cart-link"); // Assuming your cart icon has this class
     console.log('Attach event listener', nav, cartIcon);
-
     if (cartIcon) {
       cartIcon.addEventListener("click", (e) => {
         e.preventDefault(); // Prevent default behavior if any
@@ -348,8 +358,27 @@ class Navbar {
     } else {
       console.error("Cart icon not found");
     }
+     // Assuming the "About" link has a class of "about-link"
+     const aboutLink = nav.querySelector(".about-link");
+     if (aboutLink) {
+       aboutLink.addEventListener("click", (event) => {
+         event.preventDefault(); // Prevent the default link behavior
 
+         // Get the footer element
+         const footer = document.getElementById("footer");
+ 
+         if (footer) {
+           // Scroll to the footer
+           footer.scrollIntoView({ behavior: "smooth" });
+         } else {
+           console.error("Footer not found");
+         }
+       });
+     } else {
+       console.error("About link not found");
+     } 
   }
+  
 }
 
 class Cart {
@@ -457,6 +486,45 @@ class Cart {
   }
 
 }
-// Setup dropdowns
+// Footer
+class Footer {
+  static create() {
+    const footer = document.createElement("footer");
+    footer.id = "footer"; // Assign an ID to the footer element
+    footer.className = "flex items-center justify-between px-6 py-4 bg-white shadow-md z-10 bg-white py-8";
+    footer.innerHTML = `
+  <div class="flex justify-between items-center container mx-auto px-4">
+    <!-- Logo Section -->
+    <div class="flex items-center">
+      <img src="path-to-your-logo.svg" alt="Logo" class="w-24 h-auto">
+    </div>
+    
+    <!-- Social Media Icons -->
+    <div class="flex items-center space-x-6">
+      <a href="https://twitter.com/your-twitter" target="_blank">
+        <img src="../imges/x_icon.png" alt="Twitter" class="w-6 h-6">
+      </a>
+      <a href="https://www.facebook.com/your-facebook" target="_blank">
+        <img src="./imges/facebook_logo_icon.png"" alt="Facebook" class="w-6 h-6">
+      </a>
+      <a href="https://www.instagram.com/your-instagram" target="_blank">
+        <img src="../imges/instagram_icon.png" alt="Instagram" class="w-6 h-6">
+      </a>
+      <a href="https://www.github.com/your-pinterest" target="_blank">
+        <img src="../imges/github_icon.png" alt="Pinterest" class="w-6 h-6">
+      </a>
+    </div>
+    
+    <!-- Copyright Section -->
+    <div class="flex items-center">
+      <p class="text-gray-600">&copy; 2024 Built by You and Your Partner</p>
+    </div>
+  </div>`;
+
+
+    return footer;
+  }
+}
+
 
 document.addEventListener("DOMContentLoaded", App.run);
