@@ -3,7 +3,7 @@ const Body = document.querySelector("body");
 
 // Create and append the main element to the body
 const main = document.createElement("main");
-main.className = "products-container"; // Add a class for styling if needed
+main.className = "h-0vh products-container"; // Add a class for styling if needed
 Body.appendChild(main);
 
 
@@ -97,7 +97,7 @@ class HomePage {
     products.forEach((product) => {
       const productDiv = document.createElement("div");
 
-    
+
       productDiv.innerHTML = `
       <div class="relative border border-gray-200 rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105 flex flex-col h-full">
       <div class="w-full h-64 flex items-center justify-center bg-white">
@@ -160,10 +160,9 @@ class Products {
 
 class ProductPage {
   static container = document.querySelector("main");
-
   static renderProduct(product) {
     ProductPage.container.innerHTML = `
-     <div class="max-w-4xl my-8 mx-auto p-4 flex flex-col md:flex-row items-center md:items-start bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+     <div class=" max-w-4xl my-8 mx-auto p-4 flex flex-col md:flex-row items-center md:items-start bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
       <div class="w-full md:w-1/2 p-4 flex justify-center">
         <img src="${product.image}" alt="${product.title} poster" class="max-w-full h-auto object-cover rounded-lg shadow-md">
       </div>
@@ -193,7 +192,7 @@ class Navbar {
   static create(categories) {
     const nav = document.createElement("nav");
     nav.className = "flex items-center justify-between px-6 py-4 bg-white shadow-md z-10";
-     nav.innerHTML = `
+    nav.innerHTML = `
   <div class="text-2xl font-bold text-gray-900">chanta</div>
 
   <div class="hidden md:flex space-x-6">
@@ -381,27 +380,27 @@ class Navbar {
     } else {
       console.error("Cart icon not found");
     }
-     // Assuming the "About" link has a class of "about-link"
-     const aboutLink = nav.querySelector(".about-link");
-     if (aboutLink) {
-       aboutLink.addEventListener("click", (event) => {
-         event.preventDefault(); // Prevent the default link behavior
+    // Assuming the "About" link has a class of "about-link"
+    const aboutLink = nav.querySelector(".about-link");
+    if (aboutLink) {
+      aboutLink.addEventListener("click", (event) => {
+        event.preventDefault(); // Prevent the default link behavior
 
-         // Get the footer element
-         const footer = document.getElementById("footer");
- 
-         if (footer) {
-           // Scroll to the footer
-           footer.scrollIntoView({ behavior: "smooth" });
-         } else {
-           console.error("Footer not found");
-         }
-       });
-     } else {
-       console.error("About link not found");
-     } 
+        // Get the footer element
+        const footer = document.getElementById("footer");
+
+        if (footer) {
+          // Scroll to the footer
+          footer.scrollIntoView({ behavior: "smooth" });
+        } else {
+          console.error("Footer not found");
+        }
+      });
+    } else {
+      console.error("About link not found");
+    }
   }
-  
+
 }
 
 class Cart {
@@ -415,10 +414,14 @@ class Cart {
     } else {
       Cart.items.push({ product, quantity: 1 });
     }
-    this.saveItems(); // Save items to localStorage
+    this.saveItems(); 
     this.updateCartIcon();
   }
-
+  static clearCart() {
+    Cart.items = []; // Clear the cart array
+    Cart.saveItems(); // Save the empty cart to localStorage
+    Cart.updateCartIcon(); // Update the cart icon to reflect the empty state
+  }
   static removeProduct(productId) {
     Cart.items = Cart.items.filter(item => item.product.id !== productId);
     this.saveItems(); // Save updates to localStorage
@@ -469,28 +472,37 @@ class Cart {
   static renderCart() {
     const cartContainer = document.querySelector("main");
     cartContainer.innerHTML = "";
+    let totalPrice = 0;
 
     Cart.items.forEach(item => {
+      const productTotalPrice = item.product.price * item.quantity;
+      totalPrice += productTotalPrice;
       const cartItemDiv = document.createElement("div");
-      cartItemDiv.className = "cart-item flex justify-between items-center";
+      cartItemDiv.className = "cart-item h-0vh flex justify-between items-center";
 
       cartItemDiv.innerHTML = `
+      <div class="flex items-center justify-between space-x-4 p-4 border-b">
+        <!-- صورة المنتج وعنوانه وسعره -->
         <div class="flex items-center space-x-4">
           <img src="${item.product.image}" class="w-16 h-16 object-cover" alt="${item.product.title}">
           <div>
             <h5 class="text-lg font-semibold">${item.product.title}</h5>
             <p class="text-gray-700">${item.product.price} €</p>
+            <p class="text-gray-500 text-sm">Total: ${productTotalPrice.toFixed(2)} €</p> 
           </div>
         </div>
-       <div class="flex items-center space-x-4">
+
+        <!-- التحكم في الكمية وزر الحذف -->
+        <div class="flex  auto items-center space-x-2">
           <button class="decrease-btn bg-gray-300 text-black px-2 py-1 rounded">-</button>
           <input type="number" value="${item.quantity}" class="quantity-input w-16 text-center border border-gray-300 rounded" min="0" />
           <button class="increase-btn bg-gray-300 text-black px-2 py-1 rounded">+</button>
-          <button class="remove-btn bg-red-500 text-white px-2 py-1 rounded">Remove</button>
+          <button class="remove-btn bg-red-500 text-white px-4 py-2 rounded self-center">Remove</button>
+        </div>
       </div>
-
-      `;
-
+    `;
+      //
+      //addEventListeners
       cartItemDiv.querySelector(".remove-btn").addEventListener("click", () => {
         Cart.removeProduct(item.product.id);
         Cart.renderCart();
@@ -505,7 +517,23 @@ class Cart {
       });
 
       cartContainer.appendChild(cartItemDiv);
+
     });
+    // Display total price
+    const totalPriceDiv = document.createElement("div");
+    totalPriceDiv.className = "total-price text-right p-4 text-xl font-bold";
+    totalPriceDiv.innerHTML = `Total Price: ${totalPrice.toFixed(2)} €`;
+    cartContainer.appendChild(totalPriceDiv);
+     // Add Checkout button
+     const checkoutButton = document.createElement("button");
+     checkoutButton.className = "checkout-btn mt-4 bg-green-500 text-white px-4 py-2 rounded-full w-full";
+     checkoutButton.textContent = "Checkout";
+     checkoutButton.addEventListener("click", () => {
+      Cart.clearCart(); // Call the function to clear the cart
+      Cart.renderCart(); // Re-render the cart to reflect the empty state     
+      });
+      cartContainer.appendChild(checkoutButton);
+
   }
 
 }
