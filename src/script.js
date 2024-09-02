@@ -97,24 +97,35 @@ class HomePage {
     products.forEach((product) => {
       const productDiv = document.createElement("div");
 
+    
       productDiv.innerHTML = `
-        <div class="relative border rounded-lg shadow-lg overflow-hidden">
-          <img src="${product.image}" class="w-full h-60 object-cover">
-          <div class="p-4">
-            <h5 class="text-lg font-semibold">${product.title}</h5>
-            <p class="text-gray-500">${product.category}</p>
-            <p class="text-gray-700 font-bold">${product.price} €</p>
-            <p class="text-gray-700 font-bold">${product.rating.rate}</p>
-            <button class="absolute bottom-2 right-2 text-white bg-blue-500 hover:bg-blue-600 p-1 rounded-full">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18l-2 10H5L3 3z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 17a4 4 0 11-8 0"></path>
-              </svg>
-              <i class="bi bi-cart"></i>
-            </button>
-          </div>
+      <div class="relative border border-gray-200 rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105 flex flex-col h-full">
+      <div class="w-full h-64 flex items-center justify-center bg-white">
+        <img src="${product.image}" class="max-h-full max-w-full object-contain">
+      </div>
+      <div class="p-4 bg-white flex flex-col justify-between flex-grow">
+        <div>
+          <h5 class="text-lg font-semibold text-gray-800 mb-2">${product.title}</h5>
+          <p class="text-gray-500 text-sm mb-1 capitalize">${product.category}</p>
         </div>
-      `;
+        <div class="mt-auto">
+          <p class="text-gray-700 font-bold text-lg mb-2">${product.price} €</p>
+          <p class="text-yellow-500 font-semibold mb-4 flex items-center">
+            <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927a.75.75 0 011.902 0l1.425 4.313a.75.75 0 00.712.518h4.518a.75.75 0 01.44 1.362l-3.66 2.725a.75.75 0 00-.268.837l1.425 4.313a.75.75 0 01-1.155.837l-3.66-2.725a.75.75 0 00-.88 0l-3.66 2.725a.75.75 0 01-1.155-.837l1.425-4.313a.75.75 0 00-.268-.837l-3.66-2.725a.75.75 0 01.44-1.362h4.518a.75.75 0 00.712-.518l1.425-4.313z" />
+            </svg>
+            ${product.rating.rate} / 5
+          </p>
+        </div>
+      </div>
+      <button class="absolute bottom-4 right-4 text-white bg-blue-500 hover:bg-blue-600 p-3 rounded-full shadow-md focus:outline-none transition-shadow">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18l-2 10H5L3 3z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 17a4 4 0 11-8 0"></path>
+        </svg>
+      </button>
+    </div>
+        `;
 
       productDiv.querySelector("button").addEventListener("click", (e) => {
         e.stopPropagation();
@@ -152,13 +163,17 @@ class ProductPage {
 
   static renderProduct(product) {
     ProductPage.container.innerHTML = `
-      <div>
-        <img src="${product.image}" alt="${product.title} poster">
-        <h1>${product.title}</h1>
-        <p>${product.price} €</p>
-        <p>${product.category}</p>
-        <p>${product.rating.rate} stars</p>
+     <div class="max-w-4xl my-8 mx-auto p-4 flex flex-col md:flex-row items-center md:items-start bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+      <div class="w-full md:w-1/2 p-4 flex justify-center">
+        <img src="${product.image}" alt="${product.title} poster" class="max-w-full h-auto object-cover rounded-lg shadow-md">
       </div>
+      <div class="w-full md:w-1/2 p-4 text-center md:text-left">
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">${product.title}</h1>
+        <p class="text-xl font-semibold text-green-500 mb-2">${product.price} €</p>
+        <p class="text-md text-gray-600 dark:text-gray-300 mb-4">${product.category}</p>
+        <p class="text-yellow-500 text-md">${'★'.repeat(product.rating.rate)} (${product.rating.rate} stars)</p>
+      </div>
+    </div>
     `;
   }
 }
@@ -178,79 +193,87 @@ class Navbar {
   static create(categories) {
     const nav = document.createElement("nav");
     nav.className = "flex items-center justify-between px-6 py-4 bg-white shadow-md z-10";
-    nav.innerHTML = `
-  <!-- العلامة التجارية -->
-  <div class="text-xl font-bold">chanta</div>
+     nav.innerHTML = `
+  <div class="text-2xl font-bold text-gray-900">chanta</div>
 
-  <!-- عناصر القائمة -->
-  <div class="flex space-x-6">
-    <!-- Home -->
-    <a href="#" class="home-nav text-gray-600 hover:text-gray-900">Home</a>
+  <div class="hidden md:flex space-x-6">
+    <a href="index.html" class="text-gray-600 hover:text-gray-900 transition duration-300">Home</a>
 
-    <!-- Categories Dropdown -->
     <div class="relative group">
-      <button id="categories-button" class="text-gray-600 hover:text-gray-900">Categories</button>
-      <div class="categories-dropdown absolute left-0 mt-2 w-48 bg-white border rounded shadow-lg  group-hover:block z-50">
-        <div id="category-dropdown" class="categories-dropdown-content py-1" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="category-item-all" data-category="all">All</a>
+      <button id="categories-button" class="text-gray-600 hover:text-gray-900 transition duration-300 flex items-center">
+        Categories
+        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+      <div class="categories-dropdown absolute left-0 mt-2 w-48 bg-white border rounded shadow-lg hidden group-hover:block z-50 transition duration-300">
+        <div id="category-dropdown" class="categories-dropdown-content py-1" role="menu" aria-orientation="vertical" aria-labelledby="menu-button">
+          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-300" data-category="all">All</a>
           ${categories
         .map(
           (category) =>
-            `<a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="category-item-${category}" data-category="${category}">${category}</a>`
+            `<a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-300" data-category="${category}">${category}</a>`
         )
-        .join("")}
+        .join('')}
         </div>
       </div>
     </div>
 
-    <!-- Filter by Rate Dropdown -->
     <div class="relative group">
-      <button id="rate-button" class="text-gray-600 hover:text-gray-900">Filter by Rate</button>
-      <div class="rate-dropdown absolute left-0 mt-2 w-48 bg-white border rounded shadow-lg 
-       group-hover:block z-50">
-        <div class="py-1" role="menuitem">
-          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" role="menuitem" data-rate="5">5 Stars</a>
-          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" role="menuitem" data-rate="4">4 Stars & Up</a>
-          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" role="menuitem" data-rate="3">3 Stars & Up</a>
+      <button id="rate-button" class="text-gray-600 hover:text-gray-900 transition duration-300 flex items-center">
+        Filter by Rate
+        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+      <div class="rate-dropdown absolute left-0 mt-2 w-48 bg-white border rounded shadow-lg hidden group-hover:block z-50 transition duration-300">
+        <div class="py-1">
+          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-rate="5">5 Stars</a>
+          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-rate="4">4 Stars & Up</a>
+          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-rate="3">3 Stars & Up</a>
         </div>
       </div>
     </div>
 
-    <!-- Filter by Price Dropdown -->
     <div class="relative group">
-      <button id="price-button" class="text-gray-600 hover:text-gray-900">Filter by Price</button>
-      <div class="price-dropdown absolute left-0 mt-2 w-48 bg-white border rounded shadow-lg hidden group-hover:block peer-focus:block z-50 ">
-        <div class="py-1" role="menuitem">
-          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" data-price="0-50">€0 - €50</a>
-          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" data-price="50-100">€50 - €100</a>
-          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" data-price="100-200">€100 - €200</a>
-          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700" data-price="200+">€200 & Above</a>
+      <button id="price-button" class="text-gray-600 hover:text-gray-900 transition duration-300 flex items-center">
+        Filter by Price
+        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+      <div class="price-dropdown absolute left-0 mt-2 w-48 bg-white border rounded shadow-lg hidden group-hover:block z-50 transition duration-300">
+        <div class="py-1">
+          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-price="0-50">€0 - €50</a>
+          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-price="50-100">€50 - €100</a>
+          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-price="100-200">€100 - €200</a>
+          <a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-price="200+">€200 & Above</a>
         </div>
       </div>
     </div>
-    <!-- About -->
-    <a href="#" class="about-link text-gray-600 hover:text-gray-900">About</a>
+
+    <a href="#" class="about_link text-gray-600 hover:text-gray-900 transition duration-300">About</a>
   </div>
 
-  <!-- البحث والسلة -->
-  <div class="flex items-center space-x-6 ml-auto">
-    <!-- شريط البحث -->
-    <div class="flex">
+  <div class="flex items-center space-x-4">
+    <div class="relative group">
       <input id="search" type="text" placeholder="Search" class="search-input px-4 py-2 border rounded-l-md focus:outline-none">
-      <button class="search-button bg-gray-600 text-white px-4 py-2 rounded-r-md hover:bg-gray-700 focus:outline-none">Search</button>
+      <button class="search-button bg-gray-600 text-white px-4 py-2 rounded-r-md hover:bg-gray-700 transition duration-300">Search</button>
     </div>
 
-    <!-- سلة التسوق -->
-    <a href="#" class="cart-link text-gray-600 hover:text-gray-900 relative">
-      <div class=" relative">
-        <svg class="cart-svg w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18l-2 10H5L3 3z"></path>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 17a4 4 0 11-8 0"></path>
-        </svg>
-        <span class="cart-icon-count absolute top-0.5 right-2 text-xs bg-red-600 text-white rounded-full h-5 w-5 flex items-center justify-center">0</span>
-      </div>
+    <a href="#" class="relative cart-link text-gray-600 hover:text-gray-900 transition duration-300">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18l-2 10H5L3 3z"></path>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 17a4 4 0 11-8 0"></path>
+      </svg>
+      <span class="absolute top-0.5 right-2 text-xs bg-red-600 text-white rounded-full h-5 w-5 flex items-center justify-center cart-icon-count">0</span>
     </a>
   </div>
+  <button class="md:hidden text-gray-600 hover:text-gray-900">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+    </svg>
+  </button>
 `;
 
     this._addListeners(nav);
