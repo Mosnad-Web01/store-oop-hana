@@ -6,6 +6,79 @@ const main = document.createElement("main");
 main.className = "h-0vh products-container"; // Add a class for styling if needed
 Body.appendChild(main);
 
+class Login {
+  static container = document.querySelector("main");
+
+  constructor(mainContentSelector) {
+      this.mainContent = document.querySelector(mainContentSelector);
+      this.loginScreen = null;
+      this.usernameInput = null;
+      this.passwordInput = null;
+      this.loginButton = null;
+      
+     
+  }
+
+  static createLoginScreen() {
+    // إنشاء شاشة تسجيل الدخول باستخدام innerHTML
+      const loginScreen = document.createElement("div");
+      loginScreen.className='login-screen';
+      loginScreen.innerHTML = `
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">تسجيل الدخول</h2>
+        <label class=" block mb-2 text-sm font-medium text-gray-700">اسم المستخدم:</label>
+        <input type="text" class="login-username w-full px-3 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+        <label class="block mb-2 text-sm font-medium text-gray-700">كلمة المرور:</label>
+        <input type="password" class="login-password w-full px-3 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+        <button class="login-button w-full py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">تسجيل الدخول</button>
+    </div>
+`;
+      // إضافة شاشة تسجيل الدخول إلى الـ DOM
+      
+      main.appendChild(loginScreen);
+      loginScreen.querySelector(".login-button").addEventListener('click', () => this.handleLogin());
+      
+
+  }
+
+  static init() {
+      // إظهار شاشة تسجيل الدخول
+      //this.loginScreen.classList.add('show-login');
+      console.log("in init");
+
+      // إضافة مستمع الحدث لزر تسجيل الدخول
+        }
+
+  static handleLogin() {
+
+    this.usernameInput = document.querySelector('.login-username');
+    this.passwordInput = document.querySelector('.login-password');
+
+      const username = this.usernameInput.value;
+      const password = this.passwordInput.value;
+
+      // تحقق من صحة البيانات (يمكنك تخصيص هذه الدالة)
+      if (username === 'admin' && password === '1234') {
+          //this.loginScreen.classList.remove('show-login');
+          //this.mainContent.classList.add('show-content');
+           App.run();
+           //document.addEventListener("DOMContentLoaded", App.run);
+
+
+      } else {
+          alert('خطأ في اسم المستخدم أو كلمة المرور');
+      }
+  }
+  static run(){
+    const log = Login.createLoginScreen();
+    main.prepend(log);
+    Login.init();
+    console.log("here")
+}
+}
+
 
 class App {
   static products = []; // Initialize products as a static property
@@ -69,6 +142,7 @@ class APIService {
     return `${APIService.STORE_BASE_URL}/${path}`;
   }
 }
+
 
 class HomePage {
   static container = document.querySelector("main");
@@ -251,7 +325,7 @@ class Navbar {
       </div>
     </div>
 
-    <a href="#" class="about_link text-gray-600 hover:text-gray-900 transition duration-300">About</a>
+    <a href="#" class="about-link text-gray-600 hover:text-gray-900 transition duration-300">About</a>
   </div>
 
   <div class="flex items-center space-x-4">
@@ -578,4 +652,6 @@ class Footer {
 }
 
 
-document.addEventListener("DOMContentLoaded", App.run);
+// إنشاء كائن من الكلاس Login
+document.addEventListener("DOMContentLoaded", Login.run);
+
