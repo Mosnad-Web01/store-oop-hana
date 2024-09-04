@@ -652,7 +652,6 @@ class Footer {
 
 const username = Login.loadUserName(); // Load username from localStorage
 if (!username)
-// إنشاء كائن من الكلاس Login
   document.addEventListener("DOMContentLoaded", Login.run);
 else
   document.addEventListener("DOMContentLoaded", App.run);
