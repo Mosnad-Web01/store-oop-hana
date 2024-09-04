@@ -650,8 +650,8 @@ class Footer {
   }
 }
 
-const username = Login.loadUserName(); // Load username from localStorage
-if (!username)
+//const username = Login.loadUserName(); // Load username from localStorage
+//if (!username)
   document.addEventListener("DOMContentLoaded", Login.run);
-else
-  document.addEventListener("DOMContentLoaded", App.run);
+//else
+  //document.addEventListener("DOMContentLoaded", App.run);
