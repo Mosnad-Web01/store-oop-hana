@@ -18,38 +18,36 @@ class Login {
       
      
   }
-
-  static createLoginScreen() {
-    // إنشاء شاشة تسجيل الدخول باستخدام innerHTML
-      const loginScreen = document.createElement("div");
-      loginScreen.className='login-screen';
-      loginScreen.innerHTML = `
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
-        <h2 class="text-2xl font-bold mb-6 text-gray-800">تسجيل الدخول</h2>
-        <label class=" block mb-2 text-sm font-medium text-gray-700">اسم المستخدم:</label>
-        <input type="text" class="login-username w-full px-3 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-
-        <label class="block mb-2 text-sm font-medium text-gray-700">كلمة المرور:</label>
-        <input type="password" class="login-password w-full px-3 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-
-        <button class="login-button w-full py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">تسجيل الدخول</button>
-    </div>
-`;
-      // إضافة شاشة تسجيل الدخول إلى الـ DOM
-      
-      main.appendChild(loginScreen);
-      loginScreen.querySelector(".login-button").addEventListener('click', () => this.handleLogin());
-      
-
+  static saveUserName(username) {
+    localStorage.setItem('username', JSON.stringify(username));
+  }
+  static loadUserName(username) {
+    const storedUser = localStorage.getItem('username');
+    return storedUser ? JSON.parse(storedUser) : [];
   }
 
-  static init() {
-      // إظهار شاشة تسجيل الدخول
-      //this.loginScreen.classList.add('show-login');
-      console.log("in init");
+  static createLoginScreen() {
+      const loginScreen = document.createElement("div");
+      loginScreen.className='login-screen flex justify-center items-center h-screen';
+      loginScreen.innerHTML = `
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Login</h2>
+        <label class=" block mb-2 text-sm font-medium text-gray-700">User name:</label>
+        <input type="text" placeholder= "admi" class="login-username w-full px-3 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
 
-      // إضافة مستمع الحدث لزر تسجيل الدخول
-        }
+        <label class="block mb-2 text-sm font-medium text-gray-700">Passwod:</label>
+        <input type="password" placeholder="1234" class="login-password w-full px-3 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+        <button class="login-button w-full py-2 bg-black text-white font-bold rounded-lg hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500">Login</button>
+       </div>`;
+      this.init(loginScreen);
+  }
+
+  static init(loginScreen) {
+    main.appendChild(loginScreen);
+    loginScreen.querySelector(".login-button").addEventListener('click', () => this.handleLogin());
+      console.log("in init");
+   }
 
   static handleLogin() {
 
@@ -63,6 +61,7 @@ class Login {
       if (username === 'admin' && password === '1234') {
           //this.loginScreen.classList.remove('show-login');
           //this.mainContent.classList.add('show-content');
+          this.saveUserName(username);
            App.run();
            //document.addEventListener("DOMContentLoaded", App.run);
 
@@ -651,7 +650,9 @@ class Footer {
   }
 }
 
-
+const username = Login.loadUserName(); // Load username from localStorage
+if (!username)
 // إنشاء كائن من الكلاس Login
-document.addEventListener("DOMContentLoaded", Login.run);
-
+  document.addEventListener("DOMContentLoaded", Login.run);
+else
+  document.addEventListener("DOMContentLoaded", App.run);
